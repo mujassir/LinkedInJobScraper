@@ -39,16 +39,45 @@ playwright install
 ```
 
 4. Configure the application:
-   - Copy `appsettings.json` and update the following settings:
-     - `LinkedInSessionCookie`: Your LinkedIn session cookie (li_at)
+   - Copy `appsettings.json` to `appsettings.local.json`:
+     ```bash
+     cp appsettings.json appsettings.local.json
+     ```
+   - Replace the placeholder in `appsettings.local.json` with your actual LinkedIn session cookie:
+     ```json
+     {
+       "LinkedInSessionCookie": "YOUR_ACTUAL_LINKEDIN_SESSION_COOKIE"
+     }
+     ```
+   - Optionally update other settings in your `appsettings.local.json`:
      - `RelevantKeywords`: Array of keywords to filter jobs
      - `Keyword`: Main search keyword
      - `GeoId`: LinkedIn location ID
      - Adjust other parameters as needed
 
+### Getting Your LinkedIn Session Cookie
+
+1. Log in to LinkedIn in your web browser
+2. Open Developer Tools (F12 or right-click -> Inspect)
+3. Go to the "Application" tab
+4. Under "Storage" -> "Cookies" -> "https://www.linkedin.com"
+5. Find the cookie named "li_at" and copy its value
+6. Replace "YOUR_LINKEDIN_SESSION_COOKIE_HERE" in your `appsettings.local.json` with your actual cookie value
+
+⚠️ **Important Security Notes:**
+- Replace the placeholder cookie value in `appsettings.local.json` with your actual LinkedIn session cookie
+- Never commit your `appsettings.local.json` to version control
+- The repository includes `appsettings.json` with a placeholder cookie value
+- Consider using environment variables or a secure secret management system for production
+- Rotate your session cookie periodically for security
+
 ## Configuration
 
-The `appsettings.json` file contains all configurable parameters:
+The application uses two configuration files:
+- `appsettings.json`: Default configuration (committed to repository, contains placeholder values)
+- `appsettings.local.json`: Local overrides (gitignored, contains actual values)
+
+Values in `appsettings.local.json` will override those in `appsettings.json`. Here's the structure:
 
 ```json
 {
@@ -58,7 +87,7 @@ The `appsettings.json` file contains all configurable parameters:
   ],
   "Keyword": "C#, .NET",
   "GeoId": "104305776",
-  "LinkedInSessionCookie": "your-session-cookie",
+  "LinkedInSessionCookie": "YOUR_LINKEDIN_SESSION_COOKIE_HERE",
   "RandomDelay": {
     "MinSeconds": 60,
     "MaxSeconds": 200
@@ -80,7 +109,7 @@ The `appsettings.json` file contains all configurable parameters:
 - `RelevantKeywords`: Keywords to filter job listings
 - `Keyword`: Main search term for LinkedIn
 - `GeoId`: LinkedIn location ID (find this in LinkedIn URL when searching by location)
-- `LinkedInSessionCookie`: Your LinkedIn authentication cookie
+- `LinkedInSessionCookie`: Your LinkedIn authentication cookie (replace placeholder in local config)
 - `RandomDelay`: Minimum and maximum seconds between searches
 - `LinkedIn.QueryParameters`:
   - `Distance`: Search radius in miles
@@ -108,7 +137,8 @@ The program will:
 - `LinkedInScraper.cs`: Core scraping functionality
 - `ProcessedJobsManager.cs`: Manages job history and deduplication
 - `Config.cs`: Configuration management
-- `appsettings.json`: Application settings
+- `appsettings.json`: Default configuration (committed, contains placeholder values)
+- `appsettings.local.json`: Local configuration overrides (gitignored, contains actual values)
 
 ## Dependencies
 
@@ -118,9 +148,12 @@ The program will:
 
 ## Security Notes
 
-- Never commit your `appsettings.json` with your LinkedIn session cookie
+- The LinkedIn session cookie should ONLY be stored in `appsettings.local.json`
+- Never commit your `appsettings.local.json` to version control
 - Keep your session cookie secure and rotate it periodically
 - Consider using environment variables for sensitive data
+- The repository includes default settings in `appsettings.json` (no sensitive data)
+- For production environments, use a secure secret management system
 
 ## Contributing
 
